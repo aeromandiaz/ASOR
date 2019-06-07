@@ -42,19 +42,60 @@ $ip a add fd00::a:0:0:0:100/64 dev eth0
 ## Protocolo UDP Servidor de hora
 
 
-*********************** **Ejercicio 1** ***********************
+### Ejercicio 1
 
-[ej1](Protocolo_UDP_Servidor_de_hora/ej1.c)
+*Servidor UDP de fecha y hora*
 
-*********************** **Ejercicio 2** ***********************
+1.- Obtener el código del servidor del man (forma rápida)
+```
+$ man 3 getaddrinfo > udptimeserver.c
+$ gedit udptimeserver.c
+```
+Y nos quedamos con el código de ejemplo de servidor UDP.
 
-[ej2](Protocolo_UDP_Servidor_de_hora/ej2.c)
+2.- Para que funcione con IPv6, sustituir el NULL por "::" en el primer parametro de la llamada a getaddrinfo();
 
-*********************** **Ejercicio 3** ***********************
+```
+s = getaddrinfo("::", argv[1], &hints, &result);
+```
+
+3.- Metemos   #include <time.h>
+
+4.- Dentro del for(;;), obtenemos la variable del tiempo:
+```
+time_t raw;
+struct tm *tm;
+time(&raw);
+tm = localtime(&raw);
+```
+
+4.- Escribimos las condiciones para el comportamiento del servidor
+```
+if(nread==2)
+  if(buf[0]=='t') nread = strftime(buf,BUF_SIZE,"%I:%M:%S\n", tm);
+  else if(buf[0]=='d')nread = strftime(buf,BUF_SIZE,"%x\n", tm);
+  else if(buf[0]=='q')exit(0);
+```      
+
+Solución completa: [Servidor UDP Hora](Protocolo_UDP_Servidor_de_hora/ej1.c)
+
+### Ejercicio 2
+*Cliente UDP*
+
+Nos basta simplemente con el ejemplo del man
+```
+$ man 3 getaddrinfo > udpclient.c
+$ gedit udpclient.c
+```
+Y nos quedamos con el código de ejemplo de cliente UDP.
+
+Solución completa: [Cliente UDP](Protocolo_UDP_Servidor_de_hora/ej2.c)
+
+### Ejercicio 3
 
 [ej3](Protocolo_UDP_Servidor_de_hora/ej3.c)
 
-*********************** **Ejercicio 4** ***********************
+### Ejercicio 4
 
 [ej4](Protocolo_UDP_Servidor_de_hora/ej4.c)
 

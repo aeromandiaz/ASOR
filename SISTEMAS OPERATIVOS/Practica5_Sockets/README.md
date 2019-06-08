@@ -79,6 +79,7 @@ if(nread==2)
   if(buf[0]=='t') nread = strftime(buf,BUF_SIZE,"%I:%M:%S\n", tm);
   else if(buf[0]=='d')nread = strftime(buf,BUF_SIZE,"%x\n", tm);
   else if(buf[0]=='q')exit(0);
+buf[nread]='\0';//Limpiar el buffer
 ```      
 
 Solución completa: [Servidor UDP Hora](Protocolo_UDP_Servidor_de_hora/ej1.c)
@@ -113,7 +114,7 @@ FD_SET(sfd, &fset);
 s = select(sfd+1, &fset, NULL, NULL, NULL);
 if(s<=0) exit(0);//comprobación
 ```
-*Para este ejercicio, el último parametro lo podemos dejar a NULL
+*Para este ejercicio, el último parametro lo podemos dejar a NULL*
 
 4.- Ahora podemos diferenciar entre input de consola o desde el socket:
 
@@ -127,6 +128,12 @@ if(FD_ISSET(sfd, &fset)){
   if(read(0, buf, 2) < 0) perror("Fallo al leer comando de stdin");
   //...
 }
+//Calcular hora / fecha / salir
+
+//Salida por socket / consola
+if(FD_ISSET(sfd, &fset)){
+  if (sendto(sfd, buf, nread, 0, (struct sockaddr *) &peer_addr, peer_addr_len) != nread) fprintf(stderr, "Error sending response\n");
+}else if(FD_ISSET(0,&fset)) printf("%s\n",buf);
 ```
 
 Solucion completa: [UDP Multiplexado](Protocolo_UDP_Servidor_de_hora/ej3.c)
@@ -164,27 +171,27 @@ listen(sfd, 5);
 5.- Vamos a construir ahora el nuevo for(;;)
 
   a.- Borramos todas lineas hasta la inicializacion de los chars *host* y *service*
-  
+
   b.- Introducimos en su lugar la llamada a accept:
- 
+
   ```c
   peer = accept(sfd, (struct sockaddr *) &peer_addr, &peer_addr_len);
   ```
 
   c.- Borramos todas las lineas del for(;;) que están después de la llamada a getnameinfo
-  
+
   d.- Introducimos en su lugar el while que gestionará el comportamiento del servidor:
-  
+
   *NOTA: se usan 80 bytes arbitrariamente en la llamada a recv()*
-  
+
   ```c
-  while(nread = recv(peer, buf, 80, 0)){//recibe un mensaje del socket 
+  while(nread = recv(peer, buf, 80, 0)){//recibe un mensaje del socket
     buf[nread] = '\0';//limpia el buffer recibido
     printf("\tMensaje (%i bytes): %s\n", nread, buf);//lo muestra en la consola del servidor
     send(peer, buf, nread, 0);//Reenvia el mensaje integro (echo)
   }
   ```
-    
+
 Solución completa: [TCP Echo](Protocolo_TCP_Servidor_de_echo/ej1.c)
 
 ### Ejercicio 2: cliente TCP
@@ -231,9 +238,9 @@ Solución completa: [Cliente TCP](Protocolo_TCP_Servidor_de_echo/ej2.c)
 	pid_t pid;
 	pid = fork();
   ```
-  
+
 2.- Envolvemos el while y el getnameinfo dentro del if
-  
+
 ```c
 //char host[NI_MAXHOST], service[NI_MAXSERV];
 if(pid==0){//Cada hijo es un nuevo cliente
@@ -248,7 +255,7 @@ Solución completa: [TCP multiproceso](Protocolo_TCP_Servidor_de_echo/ej3.c)
 
 ### Ejercicio4: TCP multiproceso sin zombies
 *NOTA: para no dejar procesos zombies tenemos que trabajar con señales*
-1.- Metemos 
+1.- Metemos
 
 ```c
 #include<sys/wait.h>

@@ -1,46 +1,29 @@
-
-#include <stdio.h>
 #include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
-volatile int stop = 0;
-
-void hler(int senial){
-  if (senial == SIGUSR1) stop = 1;
+void detiene(int s){
+	printf("Detenido el borrado\n");
+	exit(0);
 }
 
-int main(int argc, char **argv) {
-	if (argc != 2) {
-    printf("ERROR: Introduce los segundos!\n");
-    return -1;
-  }
+void borra(int s){
+	printf("Borrando\n");
+	remove("./ej5");
+	exit(0);
+}
 
-  sigset_t mask;
-  sigemptyset(&mask);
-	sigaddset(&mask, SIGUSR1);
-  sigprocmask(SIG_UNBLOCK, &mask, NULL);
+int main(char argc, char *argv[]){
+	int a = atoi(argv[1]);
+	printf("Esperando señales, borrado en %i segundos.\n PID = %i\n", a, getpid());
+	//asigna manejador
+	signal(SIGALRM, borra);
+	signal(SIGUSR1, detiene);
 
-  struct sigaction act;
-  //Sigint
-  sigaction(SIGUSR1, NULL, &act); //Get handler
-  act.sa_handler = hler;
-  sigaction(SIGUSR1, &act, NULL); //Set sa_handler
+	alarm(a);
+	//Necesitamos un set vacio para el sigsuspend
+	sigset_t set;
+	sigemptyset(&set);
 
-  int secs = atoi(argv[1]);
-
-  int i = 0;
-	while (i < secs && stop == 0) {
-    i++;
-    sleep(1);
-  }
-
-  if (stop == 0) {
-    printf("Se va a borrar");
-    unlink(argv[0]);
-  } else {
-    printf("Has tenido suerte!");
-  }
-
-  return 0;
+	while(2) sigsuspend(&set);
 }

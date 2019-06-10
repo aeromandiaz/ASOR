@@ -1,39 +1,30 @@
-
-#include <stdio.h>
 #include <signal.h>
-#include <stdlib.h>
+#include <stdio.h>
 
-volatile int int_count = 0;
-volatile int tstp_count = 0;
+int i = 0, t = 0;
 
-void hler(int senial){
-  if (senial == SIGINT) int_count++;
-  if (senial == SIGTSTP) tstp_count++;
+void maneja(int s){
+	if(s == SIGTSTP){
+		printf("Recibo SIGTSTP\n");
+		t++;
+	}
+	if(s == SIGINT){
+		printf("Recibo SIGINT\n");
+		i++;
+	}
 }
 
 int main(){
+	printf("Esperando señales. PID = %i\n", getpid());
+	//asigna manejador
+	signal(SIGTSTP, maneja);
+	signal(SIGINT, maneja);
 
-  struct sigaction act;
-
-  //Sigint
-  sigaction(SIGINT, NULL, &act); //Get handler
-  act.sa_handler = hler;
-  sigaction(SIGINT, &act, NULL); //Set sa_handler
-  //Sigtstp
-  sigaction(SIGTSTP, NULL, &act); //Get handler
-  act.sa_handler = hler;
-  sigaction(SIGTSTP, &act, NULL); //Set sa_handler
-
-
-  sigset_t set;
+	//Necesitamos un set vacio para el sigsuspend
+	sigset_t set;
 	sigemptyset(&set);
 
-	while (int_count + tstp_count < 10)
-		sigsuspend(&set);
+	while(i+t<10) sigsuspend(&set);
 
-	printf("SIGINT captured: %i\n", int_count);
-	printf("SIGTSTP captured: %i\n", tstp_count);
-
-
-  return 0;
+	printf("Recibidas %i SIGTSTP y %i SIGINT\n", t, i);
 }

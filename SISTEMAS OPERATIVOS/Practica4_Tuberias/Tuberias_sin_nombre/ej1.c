@@ -1,40 +1,22 @@
-
 #include <stdio.h>
-#include <unistd.h>
 #include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
 
-#define PIPE_W 1
-#define PIPE_R 0
+int main(int argc, char *argv[]) {
+	int fd[2];
+	pipe(fd);
 
-int main(int argv, char** argc){
-
-  if (argv < 2) {
-    printf("Error: Introduce los comandos\n");
-  }
-
-  int fd[2];
-
-  int pipe = pipe(fd);
-
-  switch (fork()) {
-    case -1:
-      perror("ERROR al hacerl el fork");
-      return 1;
-      break;
-    case 0:
-    //Hijo
-      dup(fd[PIPE_R],0); //Cambiamos el descriptor a la entrada.
-      close(fd[PIPE_W]);
-      close(fd[PIPE_R]);
-      execlp(argc[3],argc[3],argc[4]);
-    break;
-    default:
-    //Padre
-      dup(fd[PIPE_W],1); //Cambiamos el descriptor a la entrada.
-      close(fd[PIPE_W]);
-      close(fd[PIPE_R]);
-      execlp(argc[1],argc[1],argc[2]);
-    break;
-  }
-
+	if(fork() == 0){//HIJO
+		close(fd[STDOUT_FILENO]);
+		dup2(fd[STDIN_FILENO], STDIN_FILENO);
+		close(fd[STDIN_FILENO]);
+		execlp(argv[3], argv[3], argv[4], NULL);
+	}else{//PAE
+		close(fd[STDIN_FILENO]);
+		dup2(fd[STDOUT_FILENO], STDOUT_FILENO);
+		close(fd[STDOUT_FILENO]);
+		execlp(argv[1], argv[1], argv[2], NULL);
+	}
 }

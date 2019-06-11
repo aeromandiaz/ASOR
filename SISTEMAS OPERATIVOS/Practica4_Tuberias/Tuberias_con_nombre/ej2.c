@@ -10,26 +10,22 @@
 #include <unistd.h>
 
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
+	if (argc < 2) return -1;
 
-    if (argc < 2) {
-      printf("ERROR: Es necesario un argumento.\n");
-      return -1;
-    }
-
-    char *HOME = getenv("HOME");
-		char *tuberia = strcat(HOME, "/tuberia");
-
-
-    printf("HOME: %s\n", tuberia);
-  	mkfifo(tuberia, 0777);
-
-		int fd = open(tuberia, O_WRONLY);
-
-		write(fd, argv[1], strlen(argv[1]));
-
+  int fd = open("./tuberia", O_WRONLY);
+	if (fd == -1) {
+		perror("Unable to open the pipe");
 		close(fd);
+		return -1;
+	}
 
+	if (write(fd, argv[1], strlen(argv[1])) == -1) {
+		perror("Unable to write on the pipe");
+		close(fd);
+		return -1;
+	}
 
-  return 0;
+	close(fd);
+	return 0;
 }

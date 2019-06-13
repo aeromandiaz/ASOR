@@ -9,7 +9,7 @@
 
 ## Creación y atributos de ficheros
 
-*********************** **Ejercicio 1** ***********************
+### Ejercicio 1
 
 <pre>
 <code>$man ls
@@ -34,7 +34,7 @@
 **--color=auto=never:** Colorea (o no) la salida del ls según el tipo de archivo.
 
 
-*********************** **Ejercicio 2** ***********************
+### Ejercicio 2
 
 <pre>
 <code>$ls -ld
@@ -50,14 +50,14 @@ drwxr-xr-x 3 mandy mandy 4096 ene 11 09:20 .
 
 **rmx_resto:** ejecución.
 
-*********************** **Ejercicio 3** ***********************
+### Ejercicio 3
 
 <pre>
 <code>$chmod 645 file
 $chmod u+rw-x,g+r-wx,o+rx-w file
 </code></pre>
 
-*********************** **Ejercicio 4** ***********************
+### Ejercicio 4
 
 <pre>
 <code>$mkdir test
@@ -68,11 +68,11 @@ $cd test
 Resultado:
 bash: cd: test/: Permiso denegado
 
-*********************** **Ejercicio 5** ***********************
+### Ejercicio 5
 
 [ej5](Creación_y_atributos_de_ficheros/ej5.c)
 
-*********************** **Ejercicio 6** ***********************
+### Ejercicio 6
 
 <pre>
 <code>$umask 022 #Para dejar el valor por defecto.
@@ -82,18 +82,18 @@ umask te devuelve el valor del octal en decimal.
 
 [ej6](Creación_y_atributos_de_ficheros/ej6.c)
 
-*********************** **Ejercicio 7** ***********************
+### Ejercicio 7
 
 [ej7](Creación_y_atributos_de_ficheros/ej7.c)
 
-*********************** **Ejercicio 8** ***********************
+### Ejercicio 8
 
 <pre>
 <code>$ls -i
 &man stat
 </code></pre>
 
-*********************** **Ejercicio 9** ***********************
+### Ejercicio 9
 
 [ej9](Creación_y_atributos_de_ficheros/ej9.c)
 
@@ -103,7 +103,7 @@ umask te devuelve el valor del octal en decimal.
 
 **st_ctime:** es la última modificación ya sea de permisos, del archivo, de nombre...
 
-*********************** **Ejercicio 10** ***********************
+### Ejercicio 10
 
 **Enlace Duro:** Es un nuevo nombre para un fichero, apunta al mismo nodo i y no ocupan espacio en el disco.
 
@@ -149,17 +149,17 @@ rm -rf archivosim #No pasa nada
 &rm -rf archivo #Se corrompe el enlace simbólico.
 </code></pre>
 
-*********************** **Ejercicio 11** ***********************
+### Ejercicio 11
 
 [ej11](Creación_y_atributos_de_ficheros/ej11.c)
 
 ## Redirecciones y duplicación de descriptores
 
-*********************** **Ejercicio 1** ***********************
+### Ejercicio 1
 
 [ej1](Redirecciones_y_duplicación_de_descriptores/ej1.c)
 
-*********************** **Ejercicio 2** ***********************
+### Ejercicio 2
 
 [ej2](Redirecciones_y_duplicación_de_descriptores/ej2.c)
 
@@ -167,7 +167,7 @@ ls > dirlist 2>&1: Redirecciona la salida estándar a dirlist y luego la salida 
 
 ls 2>&1 > dirlist: Redirecciona la salida de error a la salida estándar y la salida estándar a dirlist, por lo tanto los errores se van a ver por pantalla y la salina normal en el fichero dirlist.
 
-*********************** **Ejercicio  3** ***********************
+### Ejercicio  3
 
 <pre>
 <code>$int fcntl(int filedescriptor, F_DUPFD);
@@ -176,10 +176,10 @@ ls 2>&1 > dirlist: Redirecciona la salida de error a la salida estándar y la sa
 
 ## Cerrojos de ficheros
 
-*********************** **Ejercicio 1** ***********************
+### Ejercicio 1
 
 <pre>
-<code>$cat /porc/locks;
+<code>$cat /proc/locks;
 </code></pre>
 
 ![/proc/locks](locks.png)
@@ -208,11 +208,11 @@ ls 2>&1 > dirlist: Redirecciona la salida de error a la salida estándar y la sa
 
 **8.-** Byte donde acaba el bloqueo del fichero.
 
-*********************** **Ejercicio 2** ***********************
+### Ejercicio 2
 
 [ej2](Cerrojos_de_ficheros/ej2.c)
 
-*********************** **Ejercicio 3** ***********************
+### Ejercicio 3
 
 <pre>
 <code>$man flock;

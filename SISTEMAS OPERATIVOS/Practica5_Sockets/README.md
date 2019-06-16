@@ -258,7 +258,7 @@ Solución completa: [TCP multiproceso](Protocolo_TCP_Servidor_de_echo/ej3.c)
 1.- Metemos
 
 ```c
-#include<sys/wait.h>
+#include <sys/wait.h>
 ```
 
 2.- Añadimos la función
